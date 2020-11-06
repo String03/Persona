@@ -51,6 +51,7 @@
             <td>{{persona.email}}</td>
             <td>
                 <input type="button" value="eliminar" class="btn btn-danger" v-on:click="eliminarPersona(persona)"/>
+                <input type="button" value="modificar" class="btn btn-info" v-on:click="modificarPersona(persona)"/>
             </td>
         </tr>
         </tbody>
@@ -92,6 +93,19 @@
                     catch(e)
                     {
                         alert("error eliminando persona");
+                    }
+                },
+
+                modificarPersona: async function(persona){
+                    try
+                    {
+                        await axios.put(persona._links.self.href,this.persona);
+                        await this.refrescarPersonas();
+                        this.persona = {};
+                    }
+                    catch(e)
+                    {
+                        alert("error modificando persona");
                     }
                 }
 
