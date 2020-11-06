@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Persona</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+</head>
+<body>
+<div id="aplicacion">
+    <form>
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="nombre" v-model="persona.nombre" class="form-control"   placeholder="Enter nombre">
+
+        </div>
+        <div class="form-group">
+            <label>Apellido</label>
+            <input type="apellido" v-model="persona.apellido" class="form-control"   placeholder="Enter apellido">
+
+        </div>
+        <div class="form-group">
+            <label>Telefono</label>
+            <input type="telefono" v-model="persona.telefono" class="form-control"   placeholder="Enter telefono">
+
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" v-model="persona.email" class="form-control"   placeholder="Enter email">
+
+        </div>
+
+        <input type="button" value="guardar" class="btn btn-primary" v-on:click="crearPersona()"/>
+    <hr />
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>E-mail</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="persona in personas" >
+            <td>{{persona.nombre}}</td>
+            <td>{{persona.apellido}}</td>
+            <td>{{persona.telefono}}</td>
+            <td>{{persona.email}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    <script>
+        var vm = new Vue({
+            el:"#aplicacion",
+            data:{
+                personas:[],
+                persona:{}
+
+            },
+            methods:{
+                refrescarPersonas: async function(){
+                    this.personas = (await axios.get("api/persona")).data["_embedded"].personas;
+
+                },
+                crearPersona: async function(){
+                    try
+                    {
+                        await axios.post("api/persona",this.persona);
+                        await this.refrescarPersonas();
+                        this.persona = {};
+                    }
+                    catch(e)
+                    {
+                        alert("error creando persona");
+                    }
+                }
+            },
+            created: async function(){
+                await this.refrescarPersonas();
+            }
+        });
+    </script>
+</body>
+</html>
