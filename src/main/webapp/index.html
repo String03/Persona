@@ -40,6 +40,7 @@
             <th>Apellido</th>
             <th>Teléfono</th>
             <th>E-mail</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -48,6 +49,9 @@
             <td>{{persona.apellido}}</td>
             <td>{{persona.telefono}}</td>
             <td>{{persona.email}}</td>
+            <td>
+                <input type="button" value="eliminar" class="btn btn-danger" v-on:click="eliminarPersona(persona)"/>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -76,7 +80,22 @@
                     {
                         alert("error creando persona");
                     }
+                },
+
+                 eliminarPersona: async function(persona){
+                    try
+                    {
+                        await axios.delete(persona._links.self.href);
+                        await this.refrescarPersonas();
+
+                    }
+                    catch(e)
+                    {
+                        alert("error eliminando persona");
+                    }
                 }
+
+
             },
             created: async function(){
                 await this.refrescarPersonas();
